@@ -1,0 +1,24 @@
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ 1.18 ]
+
+jobs:
+   build:
+    runs-on: ubuntu-20.04
+    container:
+      image: openjdk:17-jdk
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: gradle/wrapper-validation-action@v1.0.3
+      - run: chmod +x ./gradlew
+      - run: ./gradlew clean build publish curseforge publishModrinth
+        env:
+          REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
+          CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
+          MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
+      - uses: actions/upload-artifact@v2.2.2
+        with:
+          name: Builds
+          path: build/libs/*.jar
