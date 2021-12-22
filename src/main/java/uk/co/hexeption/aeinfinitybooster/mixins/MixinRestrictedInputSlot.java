@@ -14,7 +14,7 @@ import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
  * @author Hexeption admin@hexeption.co.uk
  * @since 22/12/2021 - 10:10 am
  */
-@Mixin(value = RestrictedInputSlot.class, remap = false)
+@Mixin(value = RestrictedInputSlot.class)
 public class MixinRestrictedInputSlot {
 
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
