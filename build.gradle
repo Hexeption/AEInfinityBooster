@@ -1,0 +1,116 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+group = 'uk.co.hexeption'
+version = '1.0-SNAPSHOT'
+
+java {
+    archivesBaseName = 'AEInfinityBooster'
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+minecraft {
+    mappings channel: 'official', version: '1.18.1'
+
+    runs {
+        client {
+            workingDirectory project.file('run/client')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                aeinfinitybooster {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run/server')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                aeinfinitybooster {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run/data')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'aeinfinitybooster', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                aeinfinitybooster {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, "AEInfinityBooster.refmap.json"
+
+    config "AEInfinityBooster.mixins.json"
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    maven {
+        name "Modmaven"
+        url "https://modmaven.dev/"
+        content {
+            includeGroup 'appeng'
+        }
+    }
+    maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.7'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.1.48")
+    compileOnly fg.deobf("appeng:appliedenergistics2:10.0.0-alpha.7")
+    runtimeOnly fg.deobf("appeng:appliedenergistics2:10.0.0-alpha.7")
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : "aeinfinitybooster",
+                //"Specification-Vendor": "aeinfinitybooster authors",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                //"Implementation-Vendor": "aeinfinitybooster authors",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
