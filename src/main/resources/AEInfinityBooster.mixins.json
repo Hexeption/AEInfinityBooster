@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "uk.co.hexeption.aeinfinitybooster.mixins",
   "compatibilityLevel": "JAVA_16",
-  "refmap": "aeinfinitybooster.refmap.json",
+  "refmap": "AEInfinityBooster.refmap.json",
   "mixins": [
     "MixinWirelessTerminalMenuHost",
     "MixinWirelessBlockEntity",
