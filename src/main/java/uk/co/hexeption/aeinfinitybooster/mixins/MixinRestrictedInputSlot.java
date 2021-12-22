@@ -19,7 +19,7 @@ public class MixinRestrictedInputSlot {
 
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
     private void mayPlace(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.is(ModItems.INFINITY_CARD.get())) {
+        if (stack.is(ModItems.INFINITY_CARD.get()) || stack.is(ModItems.DIMENSION_CARD.get())) {
             cir.setReturnValue(true);
         }
     }

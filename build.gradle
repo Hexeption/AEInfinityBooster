@@ -7,14 +7,22 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+        classpath group: 'gradle.plugin.com.modrinth.minotaur', name: 'Minotaur', version: '1.1.0'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: "com.matthewprenger.cursegradle"
+apply plugin: 'maven-publish'
 
 group = 'uk.co.hexeption'
-version = '1.0-SNAPSHOT'
+version = '1.18.1-1.0.0'
+def env = System.getenv()
+if (env.GITHUB_RUN_NUMBER) {
+    version = version + "+" + "${env.GITHUB_RUN_NUMBER}"
+}
 
 java {
     archivesBaseName = 'AEInfinityBooster'
@@ -114,3 +122,80 @@ jar {
 }
 
 jar.finalizedBy('reobfJar')
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier 'deobf'
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives deobfJar
+}
+
+curseforge {
+    if (env.CURSE_API_KEY) {
+        apiKey = env.CURSE_API_KEY
+    }
+    project {
+        id = '559313'
+        changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
+        releaseType = 'release'
+        addGameVersion '1.18'
+
+        mainArtifact(jar) {
+            displayName = "AEInfinityBooster v$version"
+        }
+        relations {
+            requiredDependency 'applied-energistics-2'
+        }
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact sourcesJar
+            artifact deobfJar
+        }
+    }
+
+    // select the repositories you want to publish to
+    repositories {
+        // uncomment to publish to the local maven
+        // mavenLocal()
+        if (env.REPO_PASSWORD) {
+            maven {
+                url = "https://repo.hexeption.dev/repository/hex-mods/"
+                credentials {
+                    username = "admin"
+                    password = env.REPO_PASSWORD
+                }
+            }
+        }
+    }
+}
+
+import com.modrinth.minotaur.TaskModrinthUpload
+
+task publishModrinth (type: TaskModrinthUpload){
+    if (env.MODRINTH_API_KEY) {
+        token = env.MODRINTH_API_KEY
+    }
+    projectId = 'VQhDBNs8'
+    versionName = "AEInfinityBooster v$version"
+    changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
+    versionNumber = "$version"
+    uploadFile = jar
+    addGameVersion("1.18.1")
+    addLoader('forge')
+}
+

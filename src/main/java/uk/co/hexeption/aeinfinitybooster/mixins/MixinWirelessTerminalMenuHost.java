@@ -31,10 +31,18 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
 
     @Inject(method = "testWap", at = @At("HEAD"), cancellable = true)
     private void testWap(IWirelessAccessPoint wirelessAccessPoint, CallbackInfoReturnable<Boolean> cir) {
-        if(!this.getPlayer().level.dimension().location().toString().equals(wirelessAccessPoint.getLocation().getLevel().dimension().location().toString())){
-            return;
-        }
+
         wirelessAccessPoint.getGrid().getMachines(WirelessBlockEntity.class).forEach(wirelessBlockEntity -> {
+
+            if (wirelessBlockEntity.getInternalInventory().getStackInSlot(0).is(ModItems.DIMENSION_CARD.get())) {
+                currentDistanceFromGrid = 32;
+                cir.setReturnValue(true);
+            }
+
+            if (!this.getPlayer().level.dimension().location().toString().equals(wirelessAccessPoint.getLocation().getLevel().dimension().location().toString())) {
+                return;
+            }
+
             if (wirelessBlockEntity.getInternalInventory().getStackInSlot(0).is(ModItems.INFINITY_CARD.get())) {
                 currentDistanceFromGrid = 16;
                 cir.setReturnValue(true);
