@@ -2,13 +2,13 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ 1.18 ]
+    branches: [ 1.16 ]
 
 jobs:
    build:
     runs-on: ubuntu-20.04
     container:
-      image: openjdk:17-jdk
+      image: openjdk:8-jdk
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: gradle/wrapper-validation-action@v1.0.3

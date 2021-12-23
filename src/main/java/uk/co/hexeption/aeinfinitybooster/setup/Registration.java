@@ -1,6 +1,6 @@
 package uk.co.hexeption.aeinfinitybooster.setup;
 
-import net.minecraft.world.item.Item;
+import net.minecraft.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;

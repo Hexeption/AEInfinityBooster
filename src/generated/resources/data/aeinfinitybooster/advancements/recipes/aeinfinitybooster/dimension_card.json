@@ -11,9 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "aeinfinitybooster:infinity_card"
-            ]
+            "item": "aeinfinitybooster:infinity_card"
           }
         ]
       }

@@ -1,7 +1,7 @@
 package uk.co.hexeption.aeinfinitybooster.mixins;
 
-import appeng.menu.slot.RestrictedInputSlot;
-import net.minecraft.world.item.ItemStack;
+import appeng.container.slot.RestrictedInputSlot;
+import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +19,7 @@ public class MixinRestrictedInputSlot {
 
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
     private void mayPlace(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.is(ModItems.INFINITY_CARD.get()) || stack.is(ModItems.DIMENSION_CARD.get())) {
+        if (stack.getItem() == ModItems.INFINITY_CARD.get() || stack.getItem() == ModItems.DIMENSION_CARD.get()) {
             cir.setReturnValue(true);
         }
     }

@@ -2,13 +2,13 @@
   "required": true,
   "minVersion": "0.8",
   "package": "uk.co.hexeption.aeinfinitybooster.mixins",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_8",
   "refmap": "AEInfinityBooster.refmap.json",
   "mixins": [
-    "MixinWirelessTerminalMenuHost",
-    "MixinWirelessBlockEntity",
+    "MixinWirelessTerminalGuiObject",
+    "MixinWirelessTileEntity",
     "MixinRestrictedInputSlot",
-    "MixinWirelessMenu"
+    "MixinWirelessContainer"
   ],
   "client": [
   ],

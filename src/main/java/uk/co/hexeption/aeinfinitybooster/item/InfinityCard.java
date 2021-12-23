@@ -1,6 +1,6 @@
 package uk.co.hexeption.aeinfinitybooster.item;
 
-import net.minecraft.world.item.Item;
+import net.minecraft.item.Item;
 import uk.co.hexeption.aeinfinitybooster.AEInfinityBooster;
 
 /**

@@ -1,7 +1,7 @@
 package uk.co.hexeption.aeinfinitybooster.setup;
 
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.RegistryObject;
 import uk.co.hexeption.aeinfinitybooster.item.DimensionCard;
 import uk.co.hexeption.aeinfinitybooster.item.InfinityCard;
 
