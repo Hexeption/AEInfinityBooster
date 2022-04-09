@@ -18,7 +18,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 apply plugin: 'maven-publish'
 
 group = 'uk.co.hexeption'
-version = '1.18.1-1.0.0'
+version = '1.18.2-1.1.0'
 def env = System.getenv()
 if (env.GITHUB_RUN_NUMBER) {
     version = version + "+" + "${env.GITHUB_RUN_NUMBER}"
@@ -31,7 +31,7 @@ java {
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
-    mappings channel: 'official', version: '1.18.1'
+    mappings channel: 'official', version: '1.18.2'
 
     runs {
         client {
@@ -100,11 +100,10 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.7'
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.1.48")
-    compileOnly fg.deobf("appeng:appliedenergistics2:10.0.0-alpha.7")
-    runtimeOnly fg.deobf("appeng:appliedenergistics2:10.0.0-alpha.7")
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.44'
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.5.174")
+    compileOnly fg.deobf("appeng:appliedenergistics2:11.0.0-alpha.4")
+    runtimeOnly fg.deobf("appeng:appliedenergistics2:11.0.0-alpha.4")
 }
 
 jar {
@@ -149,6 +148,7 @@ curseforge {
         changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
         releaseType = 'release'
         addGameVersion '1.18'
+        addGameVersion '1.18.2'
 
         mainArtifact(jar) {
             displayName = "AEInfinityBooster v$version"
@@ -175,7 +175,7 @@ publishing {
         // mavenLocal()
         if (env.REPO_PASSWORD) {
             maven {
-                url = "https://repo.hexeption.dev/repository/hex-mods/"
+                url = "https://nexus.hexeption.dev/repository/hex-mods/"
                 credentials {
                     username = "admin"
                     password = env.REPO_PASSWORD
@@ -196,7 +196,7 @@ task publishModrinth (type: TaskModrinthUpload){
     changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
     versionNumber = "$version"
     uploadFile = jar
-    addGameVersion("1.18.1")
+    addGameVersion("1.18.2")
     addLoader('forge')
 }
 

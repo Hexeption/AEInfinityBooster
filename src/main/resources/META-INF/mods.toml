@@ -1,5 +1,5 @@
 modLoader = "javafml" #mandatory
-loaderVersion = "[39,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+loaderVersion = "[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 license = "GNU Lesser General Public License"
 [[mods]] #mandatory
 modId = "aeinfinitybooster" #mandatory
@@ -11,18 +11,18 @@ description = '''
 [[dependencies.aeinfinitybooster]] #optional
 modId = "forge" #mandatory
 mandatory = true #mandatory
-versionRange = "[39,)" #mandatory
+versionRange = "[40,)" #mandatory
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.aeinfinitybooster]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.1,1.19)"
+versionRange = "[1.18.2,)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.aeinfinitybooster]]
 modId = "ae2"
-versionRange = "[10.0.0-alpha.7,)"
+versionRange = "[11.0.0-alpha.4,)"
 mandatory = true
 ordering = "AFTER"
 side = "BOTH"
