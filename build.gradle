@@ -101,6 +101,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.0.44'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.5.5.174")
     compileOnly fg.deobf("appeng:appliedenergistics2:11.0.0-alpha.4")
     runtimeOnly fg.deobf("appeng:appliedenergistics2:11.0.0-alpha.4")
@@ -122,6 +123,10 @@ jar {
 }
 
 jar.finalizedBy('reobfJar')
+
+mixin {
+    add sourceSets.main, "AEInfinityBooster.refmap.json"
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
