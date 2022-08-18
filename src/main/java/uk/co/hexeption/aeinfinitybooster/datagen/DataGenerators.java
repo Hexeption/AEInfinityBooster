@@ -1,9 +1,9 @@
 package uk.co.hexeption.aeinfinitybooster.datagen;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import uk.co.hexeption.aeinfinitybooster.AEInfinityBooster;
 
 /**
@@ -22,6 +22,6 @@ public final class DataGenerators {
     public static void onGatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
 
-        generator.addProvider(new RecipeGenerator(generator));
+        generator.addProvider(true, new RecipeGenerator(generator));
     }
 }
