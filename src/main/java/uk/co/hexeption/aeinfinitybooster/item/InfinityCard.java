@@ -11,7 +11,7 @@ import uk.co.hexeption.aeinfinitybooster.AEInfinityBooster;
  */
 public class InfinityCard extends Item {
     public InfinityCard() {
-        super(new Item.Properties().tab(AEInfinityBooster.CREATIVE_MODE_TAB).durability(0));
+        super(new Item.Properties().durability(0));
     }
 
 

@@ -1,6 +1,7 @@
 package uk.co.hexeption.aeinfinitybooster.datagen;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +23,6 @@ public final class DataGenerators {
     public static void onGatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
 
-        generator.addProvider(true, new RecipeGenerator(generator));
+        generator.addProvider(true, (DataProvider.Factory<RecipeGenerator>) p_253851_ -> new RecipeGenerator(generator.getPackOutput()));
     }
 }

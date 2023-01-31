@@ -18,7 +18,7 @@ apply plugin: "com.matthewprenger.cursegradle"
 apply plugin: 'maven-publish'
 
 group = 'uk.co.hexeption'
-version = '1.19.2-1.2.0'
+version = '1.19.3-1.3.0'
 def env = System.getenv()
 if (env.GITHUB_RUN_NUMBER) {
     version = version + "+" + "${env.GITHUB_RUN_NUMBER}"
@@ -31,7 +31,7 @@ java {
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
-    mappings channel: 'official', version: '1.19.2'
+    mappings channel: 'official', version: '1.19.3'
 
     runs {
         client {
@@ -97,14 +97,19 @@ repositories {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.1.1'
+    minecraft 'net.minecraftforge:forge:1.19.3-44.1.8'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly fg.deobf("mezz.jei:jei-1.19.2-forge:11.2.0.254")
-    compileOnly fg.deobf("appeng:appliedenergistics2:12.1.1-alpha")
-    runtimeOnly fg.deobf("appeng:appliedenergistics2:12.1.1-alpha")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.19.3-forge:12.1.1.13")
+    compileOnly fg.deobf("appeng:appliedenergistics2-forge:13.0.9-beta")
+    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:13.0.9-beta")
 }
 
 jar {
@@ -153,7 +158,7 @@ curseforge {
         changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
         releaseType = 'release'
         addGameVersion '1.19'
-        addGameVersion '1.19.2'
+        addGameVersion '1.19.3'
 
         mainArtifact(jar) {
             displayName = "AEInfinityBooster v$version"
@@ -201,7 +206,7 @@ task publishModrinth (type: TaskModrinthUpload){
     changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
     versionNumber = "$version"
     uploadFile = jar
-    addGameVersion("1.19.2")
+    addGameVersion("1.19.3")
     addLoader('forge')
 }
 

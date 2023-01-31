@@ -12,7 +12,7 @@ import uk.co.hexeption.aeinfinitybooster.AEInfinityBooster;
  */
 public class DimensionCard extends Item {
     public DimensionCard() {
-        super(new Item.Properties().tab(AEInfinityBooster.CREATIVE_MODE_TAB).durability(0));
+        super(new Item.Properties().durability(0));
     }
 
     @Override
