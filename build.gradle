@@ -205,7 +205,7 @@ modrinth {
     changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
     versionNumber = "$version"
     uploadFile = jar
-    gameVersions = ["1.20.2"]
+    gameVersions = ["1.20.1"]
     loaders = ["forge"]
     dependencies {
         required.version "ae2", "forge-15.0.2-alpha"
