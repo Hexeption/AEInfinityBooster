@@ -157,8 +157,8 @@ curseforge {
         id = '559313'
         changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
         releaseType = 'release'
-        addGameVersion '1.19'
-        addGameVersion '1.19.3'
+        addGameVersion '1.20'
+        addGameVersion '1.20.1'
 
         mainArtifact(jar) {
             displayName = "AEInfinityBooster v$version"
