@@ -2,7 +2,7 @@ package uk.co.hexeption.aeinfinitybooster.mixins;
 
 import appeng.api.implementations.blockentities.IWirelessAccessPoint;
 import appeng.api.implementations.menuobjects.ItemMenuHost;
-import appeng.blockentity.networking.WirelessBlockEntity;
+import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
 import appeng.helpers.WirelessTerminalMenuHost;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,14 +32,14 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
     @Inject(method = "testWap", at = @At("HEAD"), cancellable = true)
     private void testWap(IWirelessAccessPoint wirelessAccessPoint, CallbackInfoReturnable<Boolean> cir) {
 
-        wirelessAccessPoint.getGrid().getMachines(WirelessBlockEntity.class).forEach(wirelessBlockEntity -> {
+        wirelessAccessPoint.getGrid().getMachines(WirelessAccessPointBlockEntity.class).forEach(wirelessBlockEntity -> {
 
             if (wirelessBlockEntity.getInternalInventory().getStackInSlot(0).is(ModItems.DIMENSION_CARD.get())) {
                 currentDistanceFromGrid = 32;
                 cir.setReturnValue(true);
             }
 
-            if (!this.getPlayer().level.dimension().location().toString().equals(wirelessAccessPoint.getLocation().getLevel().dimension().location().toString())) {
+            if (!this.getPlayer().level().dimension().location().toString().equals(wirelessAccessPoint.getLocation().getLevel().dimension().location().toString())) {
                 return;
             }
 

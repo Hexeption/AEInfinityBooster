@@ -1,6 +1,6 @@
 package uk.co.hexeption.aeinfinitybooster.mixins;
 
-import appeng.menu.implementations.WirelessMenu;
+import appeng.menu.implementations.WirelessAccessPointMenu;
 import appeng.menu.slot.RestrictedInputSlot;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +16,7 @@ import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
  * @author Hexeption admin@hexeption.co.uk
  * @since 22/12/2021 - 10:35 am
  */
-@Mixin(value = WirelessMenu.class)
+@Mixin(value = WirelessAccessPointMenu.class)
 public abstract class MixinWirelessMenu {
 
     @Shadow

@@ -22,5 +22,6 @@
   ],
   "result": {
     "item": "aeinfinitybooster:infinity_card"
-  }
+  },
+  "show_notification": true
 }

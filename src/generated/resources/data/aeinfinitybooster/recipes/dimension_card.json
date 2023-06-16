@@ -19,5 +19,6 @@
   ],
   "result": {
     "item": "aeinfinitybooster:dimension_card"
-  }
+  },
+  "show_notification": true
 }

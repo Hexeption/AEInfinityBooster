@@ -30,5 +30,6 @@
     "recipes": [
       "aeinfinitybooster:dimension_card"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

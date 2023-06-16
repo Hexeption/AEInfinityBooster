@@ -1,8 +1,7 @@
 package uk.co.hexeption.aeinfinitybooster.mixins;
 
 import appeng.api.inventories.InternalInventory;
-import appeng.blockentity.networking.WirelessBlockEntity;
-import appeng.core.definitions.AEItems;
+import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import net.minecraft.core.BlockPos;
@@ -15,7 +14,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 
 /**
  * MixinWirelessBlockEntity
@@ -23,7 +21,7 @@ import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
  * @author Hexeption admin@hexeption.co.uk
  * @since 22/12/2021 - 09:06 am
  */
-@Mixin(value = WirelessBlockEntity.class, remap = false)
+@Mixin(value = WirelessAccessPointBlockEntity.class, remap = false)
 public class MixinWirelessBlockEntity {
 
     @Shadow @Final private AppEngInternalInventory inv;
