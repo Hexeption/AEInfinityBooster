@@ -29,8 +29,8 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
         super(player, slot, itemStack);
     }
 
-    @Inject(method = "testWap", at = @At("HEAD"), cancellable = true)
-    private void testWap(IWirelessAccessPoint wirelessAccessPoint, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "bestWap", at = @At("HEAD"), cancellable = true)
+    private void bestWap(IWirelessAccessPoint wirelessAccessPoint, CallbackInfoReturnable<Boolean> cir) {
 
         wirelessAccessPoint.getGrid().getMachines(WirelessAccessPointBlockEntity.class).forEach(wirelessBlockEntity -> {
 
