@@ -106,11 +106,11 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.20.1-47.0.3'
+    minecraft 'net.minecraftforge:forge:1.20.1-47.1.43'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     runtimeOnly fg.deobf("mezz.jei:jei-1.20.1-forge:15.0.0.12")
-    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.2-alpha")
-    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.2-alpha")
+    compileOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.9-beta")
+    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:15.0.9-beta")
 }
 
 jar {
@@ -208,7 +208,7 @@ modrinth {
     gameVersions = ["1.20.1"]
     loaders = ["forge"]
     dependencies {
-        required.version "ae2", "forge-15.0.2-alpha"
+        required.version "ae2", "forge-15.0.9-beta"
     }
 }
 

@@ -22,7 +22,7 @@ ordering = "NONE"
 side = "BOTH"
 [[dependencies.aeinfinitybooster]]
 modId = "ae2"
-versionRange = "[15.0.2-alpha,)"
+versionRange = "[15.0.9-beta,)"
 mandatory = true
 ordering = "AFTER"
 side = "BOTH"
