@@ -35,7 +35,6 @@ public class AEInfinityBooster {
 
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener((RegisterEvent event) -> {
-            LOGGER.info("Creating Creative Mode Tab");
             if(event.getRegistryKey() == Registries.CREATIVE_MODE_TAB){
                 registerTab(event.getVanillaRegistry());
             }
@@ -62,6 +61,7 @@ public class AEInfinityBooster {
                 )
                 .title(Component.translatable("item_group." + ID + ".tab"))
                 .build();
+        LOGGER.info("Creating Creative Mode Tab");
         Registry.register(registry, new ResourceLocation(ID, "aeinfinitybooster"), tab);
     }
 
