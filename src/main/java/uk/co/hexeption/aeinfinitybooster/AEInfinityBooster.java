@@ -61,8 +61,9 @@ public class AEInfinityBooster {
                 )
                 .title(Component.translatable("item_group." + ID + ".tab"))
                 .build();
-        LOGGER.info("Creating Creative Mode Tab");
-        Registry.register(registry, new ResourceLocation(ID, "aeinfinitybooster"), tab);
+        ResourceLocation id = new ResourceLocation(ID, "aeinfinitybooster");
+        LOGGER.debug("Creating Creative Mode Tab '" + id + "'");
+        Registry.register(registry, id, tab);
     }
 
 }
