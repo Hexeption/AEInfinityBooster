@@ -16,7 +16,7 @@ jobs:
           distribution: 'temurin'
       - uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
       - run: chmod +x ./gradlew
-      - run: ./gradlew clean build curseforge modrinth
+      - run: ./gradlew clean build curseforge
         env:
           REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
           CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
