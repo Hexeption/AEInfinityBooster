@@ -2,6 +2,7 @@ package uk.co.hexeption.aeinfinitybooster.mixins;
 
 import appeng.api.inventories.InternalInventory;
 import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
+import appeng.core.definitions.AEItems;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
 import net.minecraft.core.BlockPos;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 
 /**
  * MixinWirelessBlockEntity
@@ -36,7 +38,15 @@ public class MixinWirelessBlockEntity {
 
             @Override
             public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
-                return true;
+                if(AEItems.WIRELESS_BOOSTER.is(stack)) {
+                    return true;
+                }
+
+                if(stack.is(ModItems.DIMENSION_CARD.get()) || stack.is(ModItems.INFINITY_CARD.get())){
+                    return true;
+                }
+
+                return false;
             }
         });
     }

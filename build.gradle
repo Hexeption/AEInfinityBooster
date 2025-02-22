@@ -3,14 +3,18 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.gradle.userdev' version '7.0.181'
     id 'net.darkhax.curseforgegradle' version '1.1.15'
     id "com.modrinth.minotaur" version "2.+"
 }
 
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
 def env = System.getenv()
 if (env.GITHUB_RUN_NUMBER) {
-    mod_version = '1.21-1.0.1' + "." + "${env.GITHUB_RUN_NUMBER}"
+    mod_version = '1.21.1-1.0.0' + "." + "${env.GITHUB_RUN_NUMBER}"
 }
 
 version = mod_version
@@ -53,19 +57,20 @@ runs {
 
     client {
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
     }
 
     server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        argument '--nogui'
     }
 
     gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
     }
 
     data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        arguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
@@ -78,9 +83,9 @@ configurations {
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly "mezz.jei:jei-1.21-neoforge:19.0.0.5"
-    compileOnly "appeng:appliedenergistics2-neoforge:19.0.4-alpha"
-    runtimeOnly "appeng:appliedenergistics2-neoforge:19.0.4-alpha"
+    runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
+    compileOnly "appeng:appliedenergistics2:19.1.2-beta"
+    runtimeOnly "appeng:appliedenergistics2:19.1.2-beta"
 }
 
 tasks.withType(ProcessResources).configureEach {
@@ -126,7 +131,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.releaseType = 'release'
     mainFile.changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
     mainFile.changelogType = 'markdown'
-    mainFile.gameVersions = ['1.21']
+    mainFile.gameVersions = ['1.21.1']
     mainFile.addModLoader("neoforge")
     mainFile.displayName = "AEInfinityBooster ${version}"
 
@@ -139,9 +144,9 @@ modrinth {
     versionName = "AEInfinityBooster $version"
     changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
     uploadFile = jar
-    gameVersions = ["1.21"]
+    gameVersions = ["1.21.1"]
     loaders = ["neoforge"]
     dependencies {
-        required.version "ae2", "19.0.4-alpha"
+        required.version "ae2", "19.1.2-beta"
     }
 }

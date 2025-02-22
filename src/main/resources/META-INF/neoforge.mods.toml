@@ -34,6 +34,6 @@ config="AEInfinityBooster.mixins.json"
 [[dependencies.${mod_id}]]
 modId="ae2"
 type="required"
-versionRange="[19.0.4-alpha,)"
+versionRange="[19.1.2-beta,)"
 ordering="AFTER"
 side="BOTH"

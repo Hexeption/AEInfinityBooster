@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import uk.co.hexeption.aeinfinitybooster.config.AEInfinityBoosterConfig;
 import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 
 /**
@@ -26,11 +27,21 @@ public abstract class MixinWirelessMenu {
     @Final
     private RestrictedInputSlot boosterSlot;
 
+    @Shadow protected abstract void setDrain(long drain);
+
     @Inject(method = "broadcastChanges", at = @At(value = "INVOKE", target = "Lappeng/menu/AEBaseMenu;broadcastChanges()V", shift = At.Shift.BEFORE))
     private void broadcastChanges(CallbackInfo ci) {
 
         if (this.boosterSlot.getItem().is(ModItems.INFINITY_CARD.get()) || this.boosterSlot.getItem().is(ModItems.DIMENSION_CARD.get())) {
             this.setRange(Long.MAX_VALUE);
+        }
+
+        if (this.boosterSlot.getItem().is(ModItems.INFINITY_CARD.get())) {
+            this.setDrain((long) 100 * AEInfinityBoosterConfig.INFINITY_CARD_DRAIN.get());
+        }
+
+        if (this.boosterSlot.getItem().is(ModItems.DIMENSION_CARD.get())) {
+            this.setDrain((long) 100 * AEInfinityBoosterConfig.DIMENSION_CARD_DRAIN.get());
         }
     }
 

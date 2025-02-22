@@ -8,11 +8,15 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.co.hexeption.aeinfinitybooster.config.AEInfinityBoosterConfig;
 import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 import uk.co.hexeption.aeinfinitybooster.setup.Registration;
 
@@ -48,6 +52,9 @@ public class AEInfinityBooster {
     public AEInfinityBooster(IEventBus modEventBus, ModContainer modContainer) {
 
         Registration.register(modEventBus);
+
+        modContainer.registerConfig(ModConfig.Type.COMMON, AEInfinityBoosterConfig.CONFIG_SPEC);
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 
 
         CREATIVE_MODE_TAB.register(modEventBus);
