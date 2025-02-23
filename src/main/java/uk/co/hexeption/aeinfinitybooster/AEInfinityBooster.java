@@ -54,7 +54,6 @@ public class AEInfinityBooster {
         Registration.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, AEInfinityBoosterConfig.CONFIG_SPEC);
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 
 
         CREATIVE_MODE_TAB.register(modEventBus);
