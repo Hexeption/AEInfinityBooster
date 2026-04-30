@@ -21,6 +21,12 @@ import uk.co.hexeption.aeinfinitybooster.config.AEInfinityBoosterConfig;
 import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 import uk.co.hexeption.aeinfinitybooster.init.IChunkForceable;
 
+/**
+ * MixinWirelessBlockEntity
+ *
+ * @author Hexeption admin@hexeption.co.uk
+ * @since 22/12/2021 - 09:06 am
+ */
 @Mixin(value = WirelessAccessPointBlockEntity.class, remap = false)
 public abstract class MixinWirelessBlockEntity extends AEBaseBlockEntity implements IChunkForceable {
 
