@@ -1,7 +1,9 @@
 modLoader="javafml" #mandatory
 loaderVersion="${loader_version_range}" #mandatory
 license="${mod_license}"
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL="${issue_tracker}" #optional
+
+
 [[mods]] #mandatory
 modId="${mod_id}" #mandatory
 version="${mod_version}" #mandatory
@@ -20,20 +22,28 @@ config="AEInfinityBooster.mixins.json"
 [[dependencies.${mod_id}]] #optional
     modId="neoforge" #mandatory
     type="required" #mandatory
-    versionRange="${neo_version_range}" #mandatory
+    versionRange="${neo_version}" #mandatory
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="minecraft"
     type="required"
-    versionRange="${minecraft_version_range}"
+    versionRange="${minecraft_version}"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="ae2"
 type="required"
-versionRange="[19.1.2-beta,)"
+versionRange="${ae2_version}"
 ordering="AFTER"
 side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="jei"
+type="optional"
+versionRange="${jei_version}"
+ordering="AFTER"
+side="BOTH"
+
