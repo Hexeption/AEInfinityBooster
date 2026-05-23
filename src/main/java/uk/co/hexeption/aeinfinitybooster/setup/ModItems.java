@@ -13,8 +13,8 @@ import uk.co.hexeption.aeinfinitybooster.item.InfinityCard;
  */
 public class ModItems {
 
-    public static final DeferredItem<Item> INFINITY_CARD = Registration.ITEMS.register("infinity_card", InfinityCard::new);
-    public static final DeferredItem<Item> DIMENSION_CARD = Registration.ITEMS.register("dimension_card", DimensionCard::new);
+    public static final DeferredItem<Item> INFINITY_CARD = Registration.ITEMS.registerItem("infinity_card", InfinityCard::new);
+    public static final DeferredItem<Item> DIMENSION_CARD = Registration.ITEMS.registerItem("dimension_card", DimensionCard::new);
 
     static void register() {
 

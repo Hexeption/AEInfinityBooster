@@ -37,7 +37,7 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
                 cir.setReturnValue(new WirelessTerminalMenuHost.AccessPointSignal(1024.0D, 1024.0D));
             }
 
-            if (!this.getPlayer().level().dimension().location().toString().equals(wirelessAccessPoint.getLocation().getLevel().dimension().location().toString())) {
+            if (!this.getPlayer().level().dimension().identifier().toString().equals(wirelessAccessPoint.getLocation().getLevel().dimension().identifier().toString())) {
                 return;
             }
 

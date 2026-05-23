@@ -10,10 +10,7 @@ import uk.co.hexeption.aeinfinitybooster.AEInfinityBooster;
  * @since 22/12/2021 - 08:51 am
  */
 public class InfinityCard extends Item {
-    public InfinityCard() {
-        super(new Item.Properties().durability(0));
+    public InfinityCard(Properties properties) {
+        super(properties.durability(0));
     }
-
-
-
 }

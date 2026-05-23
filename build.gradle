@@ -3,8 +3,8 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.181'
-    id 'net.darkhax.curseforgegradle' version '1.1.15'
+    id 'net.neoforged.moddev' version '2.0.141'
+    id 'net.darkhax.curseforgegradle' version '1.2.30'
     id "com.modrinth.minotaur" version "2.+"
 }
 
@@ -14,7 +14,7 @@ tasks.named('wrapper', Wrapper).configure {
 
 def env = System.getenv()
 if (env.GITHUB_RUN_NUMBER) {
-    mod_version = '1.21.1-1.0.0' + "." + "${env.GITHUB_RUN_NUMBER}"
+    mod_version = minecraft_version + '-'+ mod_version + "." + "${env.GITHUB_RUN_NUMBER}"
 }
 
 version = mod_version
@@ -22,13 +22,7 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
-    maven {
-        name "Modmaven"
-        url "https://modmaven.dev/"
-        content {
-            includeGroup 'appeng'
-        }
-    }
+    mavenCentral()
     maven {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
@@ -44,33 +38,45 @@ base {
     archivesName = mod_id + "-neoforge"
 }
 
-// Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+// Mojang ships Java 25 to end users in 26.1.2, so mods should target Java 25.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-runs {
-    configureEach {
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
+neoForge {
+    // Specify the version of NeoForge to use.
+    version = project.neo_version
 
-        modSource project.sourceSets.main
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        data {
+            clientData()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
     }
 
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    server {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-        argument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    data {
-        arguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
     }
 }
 
@@ -81,34 +87,35 @@ configurations {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
-    compileOnly "appeng:appliedenergistics2:19.1.2-beta"
-    runtimeOnly "appeng:appliedenergistics2:19.1.2-beta"
+    runtimeOnly "mezz.jei:jei-26.1.2-neoforge:29.6.2.31"
+    compileOnly "org.appliedenergistics:appliedenergistics2:26.1.9-alpha"
+    runtimeOnly "org.appliedenergistics:appliedenergistics2:26.1.9-alpha"
 }
 
-tasks.withType(ProcessResources).configureEach {
+// This block of code expands all declared replace properties in the specified resource targets.
+// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
-            loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
             mod_version            : mod_version,
+            mod_description        : mod_description,
             mod_authors            : mod_authors,
-            mod_description        : mod_description
     ]
     inputs.properties replaceProperties
-
-    filesMatching(['META-INF/neoforge.mods.toml']) {
-        expand replaceProperties
-    }
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
 }
-
+// Include the output of "generateModMetadata" as an input directory for the build
+// this works with both building through Gradle and the IDE.
+sourceSets.main.resources.srcDir generateModMetadata
+// To avoid having to run "generateModMetadata" manually, make it run on every project reload
+neoForge.ideSyncTask generateModMetadata
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
@@ -131,7 +138,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.releaseType = 'release'
     mainFile.changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
     mainFile.changelogType = 'markdown'
-    mainFile.gameVersions = ['1.21.1']
+    mainFile.gameVersions = [minecraft_version]
     mainFile.addModLoader("neoforge")
     mainFile.displayName = "AEInfinityBooster ${version}"
 
@@ -144,9 +151,9 @@ modrinth {
     versionName = "AEInfinityBooster $version"
     changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'
     uploadFile = jar
-    gameVersions = ["1.21.1"]
+    gameVersions = [minecraft_version]
     loaders = ["neoforge"]
     dependencies {
-        required.version "ae2", "19.1.2-beta"
+        required.version "ae2", "26.1.9-alpha"
     }
 }

@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "E": {
-      "item": "minecraft:ender_eye"
-    },
-    "N": {
-      "item": "minecraft:netherite_ingot"
-    },
-    "R": {
-      "item": "ae2:wireless_booster"
-    },
-    "S": {
-      "item": "minecraft:nether_star"
-    }
+    "E": "minecraft:ender_eye",
+    "N": "minecraft:netherite_ingot",
+    "R": "ae2:wireless_booster",
+    "S": "minecraft:nether_star"
   },
   "pattern": [
     "ERE",
@@ -21,7 +13,6 @@
     "NNN"
   ],
   "result": {
-    "count": 1,
     "id": "aeinfinitybooster:infinity_card"
   }
 }
