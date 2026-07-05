@@ -12,36 +12,11 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-def env = System.getenv()
-if (env.GITHUB_RUN_NUMBER) {
-    mod_version = '1.21.1-1.0.0' + "." + "${env.GITHUB_RUN_NUMBER}"
-}
-
-version = mod_version
+version =minecraft_version + "-" + mod_version + "-" + tag_platform
 group = mod_group_id
 
-repositories {
-    mavenLocal()
-    maven {
-        name "Modmaven"
-        url "https://modmaven.dev/"
-        content {
-            includeGroup 'appeng'
-        }
-    }
-    maven {
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        // location of the maven that hosts JEI files since January 2023
-        name = "Jared's maven"
-        url = "https://maven.blamejared.com/"
-    }
-}
-
 base {
-    archivesName = mod_id + "-neoforge"
+    archivesName = mod_name 
 }
 
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
@@ -80,27 +55,55 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name "Modmaven"
+        url "https://modmaven.dev/"
+    }
+    maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+}
+
+
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.21.0.247"
-    compileOnly "appeng:appliedenergistics2:19.1.2-beta"
-    runtimeOnly "appeng:appliedenergistics2:19.1.2-beta"
-}
+
+
+    runtimeOnly "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+    implementation "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+
+    //AE2 
+    compileOnly "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+    runtimeOnly "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+    implementation "org.appliedenergistics:appliedenergistics2:${ae2_version}"
+    implementation "org.appliedenergistics:guideme:${guideme_version}"
+    }
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
             neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
             loader_version_range   : loader_version_range,
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
             mod_version            : mod_version,
             mod_authors            : mod_authors,
-            mod_description        : mod_description
+            mod_description        : mod_description,
+            issue_tracker          : issue_tracker,
+            ae2_version             : ae2_version,
+            jei_version             : jei_version
     ]
     inputs.properties replaceProperties
 
@@ -124,7 +127,7 @@ idea {
 
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
 
-    apiToken = env.CURSE_API_KEY
+    apiToken = System.getenv("CURSE_API_KEY")
 
     // The main file to upload
     def mainFile = upload(559313, jar)
@@ -139,7 +142,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 }
 
 modrinth {
-    token = env.MODRINTH_API_KEY
+   token = System.getenv("MODRINTH_API_KEY")
     projectId = 'VQhDBNs8'
     versionName = "AEInfinityBooster $version"
     changelog = 'A changelog can be found at https://github.com/Hexeption/AEInfinityBooster'

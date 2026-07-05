@@ -9,7 +9,8 @@
     "MixinWirelessBlockEntity",
     "MixinRestrictedInputSlot",
     "MixinWirelessMenu",
-    "MixinWirelessAccessPointScreen"
+    "MixinWirelessAccessPointScreen",
+    "MixinWirelessBlockEntityRemove"
   ],
   "client": [
   ],

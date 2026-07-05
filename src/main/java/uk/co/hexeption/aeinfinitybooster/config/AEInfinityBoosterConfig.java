@@ -11,6 +11,7 @@ public class AEInfinityBoosterConfig {
 
     public static ModConfigSpec.IntValue DIMENSION_CARD_DRAIN;
     public static ModConfigSpec.IntValue INFINITY_CARD_DRAIN;
+    public static ModConfigSpec.BooleanValue CHUNK_LOADING_ENABLED;
 
     private AEInfinityBoosterConfig(ModConfigSpec.Builder builder) {
         builder.push("general");
@@ -19,6 +20,10 @@ public class AEInfinityBoosterConfig {
                 .defineInRange("dimensionCardDrain", 100, 0, Integer.MAX_VALUE);
         INFINITY_CARD_DRAIN = builder.comment("The amount of power the Infinity Card drains per tick")
                 .defineInRange("infinityCardDrain", 50, 0, Integer.MAX_VALUE);
+        CHUNK_LOADING_ENABLED = builder.comment(
+                        "If true, inserting a Dimension Card or Infinity Card into a Wireless Access Point",
+                        "will keep the chunk loaded even when no players are nearby.")
+                .define("chunkLoadingEnabled", true);
         builder.pop();
     }
 
