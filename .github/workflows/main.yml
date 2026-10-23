@@ -47,6 +47,8 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    # A game test that never finishes keeps the server running, so don't let one eat hours of runner time
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
       # 1.20.1 needs 17, 1.20.5 to 1.21.1 need 21, and 26.x needs 25
