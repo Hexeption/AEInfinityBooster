@@ -1,5 +1,6 @@
 {
   "item_group.aeinfinitybooster.tab": "Boosteur infini AE",
-  "item.aeinfinitybooster.infinity_card": "Boosteur de porté infini",
-  "item.aeinfinitybooster.dimension_card": "Carte dimensionnel"
+  "item.aeinfinitybooster.infinity_card": "Boosteur de portée infinie",
+  "item.aeinfinitybooster.dimension_card": "Carte dimensionnelle",
+  "item.aeinfinitybooster.dimension_card.tooltip": "Ne fournit pas de capacités de chargement de chunks."
 }
