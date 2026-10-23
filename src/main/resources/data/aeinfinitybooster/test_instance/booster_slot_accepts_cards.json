@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "aeinfinitybooster:booster_slot_accepts_cards",
+  "max_ticks": 20,
+  "required": true,
+  "setup_ticks": 1,
+  "structure": "aeinfinitybooster:cardgametests.empty"
+}
