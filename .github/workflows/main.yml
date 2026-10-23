@@ -57,6 +57,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: |
+            8
             17
             21
             25
@@ -94,6 +95,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: |
+            8
             17
             21
             25
