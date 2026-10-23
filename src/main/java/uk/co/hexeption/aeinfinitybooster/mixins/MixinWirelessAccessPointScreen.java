@@ -13,6 +13,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//? if <1.19
+/*import net.minecraft.network.chat.TextComponent;*/
+
 @Mixin(value = WirelessAccessPointScreen.class, remap = false)
 public class MixinWirelessAccessPointScreen extends AEBaseScreen<WirelessAccessPointMenu> {
 
@@ -25,8 +28,13 @@ public class MixinWirelessAccessPointScreen extends AEBaseScreen<WirelessAccessP
     private void updateBeforeRender(CallbackInfo ci) {
         super.updateBeforeRender();
 
+        //? if >=1.19 {
         Component rangeText = Component.empty();
         Component energyUseText = Component.empty();
+        //?} else {
+        /*Component rangeText = TextComponent.EMPTY;
+        Component energyUseText = TextComponent.EMPTY;
+        *///?}
         if (menu.getRange() > 0) {
             double rangeBlocks = menu.getRange() / 10.0;
             rangeText = GuiText.WirelessRange.text(rangeBlocks);

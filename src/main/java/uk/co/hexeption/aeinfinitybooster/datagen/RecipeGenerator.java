@@ -1,4 +1,4 @@
-
+//? if >=1.20 {
 package uk.co.hexeption.aeinfinitybooster.datagen;
 
 import appeng.core.definitions.AEItems;
@@ -113,3 +113,4 @@ public class RecipeGenerator extends RecipeProvider {
     }
     *///?}
 }
+//?}

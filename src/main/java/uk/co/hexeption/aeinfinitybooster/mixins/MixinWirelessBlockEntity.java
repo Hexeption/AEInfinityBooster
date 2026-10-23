@@ -1,11 +1,8 @@
 package uk.co.hexeption.aeinfinitybooster.mixins;
 
-import appeng.api.inventories.InternalInventory;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
-import appeng.core.definitions.AEItems;
 import appeng.util.inv.AppEngInternalInventory;
-import appeng.util.inv.filter.IAEItemFilter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import uk.co.hexeption.aeinfinitybooster.config.AEInfinityBoosterConfig;
 import uk.co.hexeption.aeinfinitybooster.init.IChunkForceable;
 import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
+import uk.co.hexeption.aeinfinitybooster.util.AccessPointCardFilter;
 
 /**
  * MixinWirelessBlockEntity
@@ -60,25 +58,7 @@ public abstract class MixinWirelessBlockEntity extends AEBaseBlockEntity impleme
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void init(BlockEntityType blockEntityType, BlockPos pos, BlockState blockState, CallbackInfo ci){
-        inv.setFilter(new IAEItemFilter() {
-            @Override
-            public boolean allowExtract(InternalInventory inv, int slot, int amount) {
-                return true;
-            }
-
-            @Override
-            public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
-                if(stack.is(AEItems.WIRELESS_BOOSTER.asItem())) {
-                    return true;
-                }
-
-                if(stack.is(ModItems.DIMENSION_CARD.get()) || stack.is(ModItems.INFINITY_CARD.get())){
-                    return true;
-                }
-
-                return false;
-            }
-        });
+        inv.setFilter(new AccessPointCardFilter());
     }
 
     @Inject(method = "onReady", at = @At("RETURN"))

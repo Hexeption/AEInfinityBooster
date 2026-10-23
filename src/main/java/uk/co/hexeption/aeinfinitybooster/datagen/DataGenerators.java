@@ -1,4 +1,4 @@
-//? if forgeLike {
+//? if forgeLike && >=1.20 {
 package uk.co.hexeption.aeinfinitybooster.datagen;
 
 import net.minecraft.data.DataGenerator;

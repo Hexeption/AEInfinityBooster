@@ -18,6 +18,8 @@ import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 
 //? if >=1.20.5
 import net.minecraft.world.level.GameType;
+//? if <1.20
+/*import net.minecraft.gametest.framework.GameTestAssertException;*/
 
 //? if >=1.21.5 {
 import net.minecraft.core.registries.Registries;
@@ -97,10 +99,10 @@ public class CardGameTests {
     public static void accessPointAcceptsCards(GameTestHelper helper) {
         WirelessAccessPointBlockEntity accessPoint = placeAccessPoint(helper);
 
-        helper.assertTrue(accessPoint.getInternalInventory().isItemValid(0, new ItemStack(ModItems.INFINITY_CARD.get())), "Access point rejected the Infinity Card");
-        helper.assertTrue(accessPoint.getInternalInventory().isItemValid(0, new ItemStack(ModItems.DIMENSION_CARD.get())), "Access point rejected the Dimension Card");
-        helper.assertTrue(accessPoint.getInternalInventory().isItemValid(0, new ItemStack(AEItems.WIRELESS_BOOSTER.asItem())), "Access point rejected AE2's Wireless Booster");
-        helper.assertFalse(accessPoint.getInternalInventory().isItemValid(0, new ItemStack(Items.DIRT)), "Access point accepted dirt");
+        assertTrue(helper, accessPoint.getInternalInventory().isItemValid(0, new ItemStack(ModItems.INFINITY_CARD.get())), "Access point rejected the Infinity Card");
+        assertTrue(helper, accessPoint.getInternalInventory().isItemValid(0, new ItemStack(ModItems.DIMENSION_CARD.get())), "Access point rejected the Dimension Card");
+        assertTrue(helper, accessPoint.getInternalInventory().isItemValid(0, new ItemStack(AEItems.WIRELESS_BOOSTER.asItem())), "Access point rejected AE2's Wireless Booster");
+        assertFalse(helper, accessPoint.getInternalInventory().isItemValid(0, new ItemStack(Items.DIRT)), "Access point accepted dirt");
         helper.succeed();
     }
 
@@ -108,8 +110,8 @@ public class CardGameTests {
     public static void boosterSlotAcceptsCards(GameTestHelper helper) {
         Slot boosterSlot = boosterSlot(openMenu(helper, placeAccessPoint(helper)));
 
-        helper.assertTrue(boosterSlot.mayPlace(new ItemStack(ModItems.INFINITY_CARD.get())), "Booster slot rejected the Infinity Card");
-        helper.assertTrue(boosterSlot.mayPlace(new ItemStack(ModItems.DIMENSION_CARD.get())), "Booster slot rejected the Dimension Card");
+        assertTrue(helper, boosterSlot.mayPlace(new ItemStack(ModItems.INFINITY_CARD.get())), "Booster slot rejected the Infinity Card");
+        assertTrue(helper, boosterSlot.mayPlace(new ItemStack(ModItems.DIMENSION_CARD.get())), "Booster slot rejected the Dimension Card");
         helper.succeed();
     }
 
@@ -137,7 +139,7 @@ public class CardGameTests {
         accessPoint.saveChanges();
 
         // setChunkForced returns whether it changed anything, so false means the chunk was still forced
-        helper.assertFalse(level.setChunkForced(chunkX, chunkZ, true), "Taking the card out released a chunk the access point didn't force");
+        assertFalse(helper, level.setChunkForced(chunkX, chunkZ, true), "Taking the card out released a chunk the access point didn't force");
         helper.succeed();
     }
 
@@ -148,9 +150,23 @@ public class CardGameTests {
         WirelessAccessPointMenu menu = openMenu(helper, accessPoint);
         menu.broadcastChanges();
 
-        helper.assertTrue(menu.getRange() == Long.MAX_VALUE, "Expected unlimited range but got " + menu.getRange());
-        helper.assertTrue(menu.getDrain() == expectedDrain, "Expected a drain of " + expectedDrain + " but got " + menu.getDrain());
+        assertTrue(helper, menu.getRange() == Long.MAX_VALUE, "Expected unlimited range but got " + menu.getRange());
+        assertTrue(helper, menu.getDrain() == expectedDrain, "Expected a drain of " + expectedDrain + " but got " + menu.getDrain());
         helper.succeed();
+    }
+
+    private static void assertTrue(GameTestHelper helper, boolean condition, String message) {
+        //? if >=1.20 {
+        helper.assertTrue(condition, message);
+        //?} else {
+        /*if (!condition) {
+            throw new GameTestAssertException(message);
+        }
+        *///?}
+    }
+
+    private static void assertFalse(GameTestHelper helper, boolean condition, String message) {
+        assertTrue(helper, !condition, message);
     }
 
     private static WirelessAccessPointBlockEntity placeAccessPoint(GameTestHelper helper) {

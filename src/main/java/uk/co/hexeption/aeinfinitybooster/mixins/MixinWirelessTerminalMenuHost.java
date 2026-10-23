@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 
+//? if <1.20
+/*import org.spongepowered.asm.mixin.Shadow;*/
 //? if >=1.20.4 {
 import appeng.menu.locator.ItemMenuHostLocator;
 import net.minecraft.world.item.Item;
@@ -40,7 +42,7 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
             cir.setReturnValue(new WirelessTerminalMenuHost.AccessPointSignal(distance, distance));
         }
     }
-    //?} else {
+    //?} else if >=1.20 {
     /*public MixinWirelessTerminalMenuHost(Player player, int slot, ItemStack itemStack) {
         super(player, slot, itemStack);
     }
@@ -50,6 +52,26 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
         Double distance = boostedDistance(wirelessAccessPoint);
         if (distance != null) {
             cir.setReturnValue(distance);
+        }
+    }
+    *///?} else {
+    /*@Shadow
+    private double sqRange;
+
+    @Shadow
+    private double currentDistanceFromGrid;
+
+    public MixinWirelessTerminalMenuHost(Player player, Integer slot, ItemStack itemStack) {
+        super(player, slot, itemStack);
+    }
+
+    @Inject(method = "testWap", at = @At("HEAD"), cancellable = true)
+    private void testWap(IWirelessAccessPoint wirelessAccessPoint, CallbackInfoReturnable<Boolean> cir) {
+        Double distance = boostedDistance(wirelessAccessPoint);
+        if (distance != null && distance < sqRange) {
+            sqRange = distance;
+            currentDistanceFromGrid = Math.sqrt(distance);
+            cir.setReturnValue(true);
         }
     }
     *///?}
@@ -67,7 +89,10 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
         }
 
         ItemStack card = wirelessBlockEntity.getInternalInventory().getStackInSlot(0);
+        //? if >=1.20 {
         boolean sameDimension = this.getPlayer().level().dimension().equals(wirelessAccessPoint.getLocation().getLevel().dimension());
+        //?} else
+        /*boolean sameDimension = this.getPlayer().level.dimension().equals(wirelessAccessPoint.getLocation().getLevel().dimension());*/
 
         if (card.is(ModItems.INFINITY_CARD.get()) && sameDimension) {
             return 256.0D;

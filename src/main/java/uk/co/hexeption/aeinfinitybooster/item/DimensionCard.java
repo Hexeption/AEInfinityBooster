@@ -18,6 +18,8 @@ import net.minecraft.world.item.component.TooltipDisplay;
 /*import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 *///?}
+//? if <1.19
+/*import net.minecraft.network.chat.TranslatableComponent;*/
 
 /**
  * DimensionCard
@@ -55,7 +57,10 @@ public class DimensionCard extends Item {
     private static Component tooltip() {
         Style style = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withItalic(true);
         String key = chunkLoadingEnabled() ? "item.aeinfinitybooster.dimension_card.tooltip.chunk_loading" : "item.aeinfinitybooster.dimension_card.tooltip";
+        //? if >=1.19 {
         return Component.translatable(key).withStyle(style);
+        //?} else
+        /*return new TranslatableComponent(key).withStyle(style);*/
     }
 
     // Falls back to the default (on) if a tooltip is drawn before the config has loaded

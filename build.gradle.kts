@@ -7,6 +7,16 @@ plugins {
 val minecraft = stonecutter.current.version
 val unobfuscated = stonecutter.eval(minecraft, ">=26.1")
 
+// AE2 renamed the access point classes in 1.20
+stonecutter {
+    replacements.regex(stonecutter.eval(minecraft, "<1.20")) {
+        replace(
+            "\\bWirelessAccessPoint(BlockEntity|Menu|Screen)\\b", "Wireless\$1",
+            "\\bWireless(BlockEntity|Menu|Screen)\\b", "WirelessAccessPoint\$1",
+        )
+    }
+}
+
 repositories {
     mavenCentral()
     maven("https://modmaven.dev/") { name = "ModMaven" }
