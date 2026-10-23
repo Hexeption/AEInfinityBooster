@@ -38,7 +38,7 @@ public class MixinWirelessBlockEntity {
 
             @Override
             public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
-                if(AEItems.WIRELESS_BOOSTER.is(stack)) {
+                if(stack.is(AEItems.WIRELESS_BOOSTER.asItem())) {
                     return true;
                 }
 

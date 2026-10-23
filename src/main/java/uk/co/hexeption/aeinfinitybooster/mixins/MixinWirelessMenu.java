@@ -17,17 +17,18 @@ import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
  * @author Hexeption admin@hexeption.co.uk
  * @since 22/12/2021 - 10:35 am
  */
-@Mixin(value = WirelessAccessPointMenu.class, remap = false)
+@Mixin(WirelessAccessPointMenu.class)
 public abstract class MixinWirelessMenu {
 
-    @Shadow
+    @Shadow(remap = false)
     protected abstract void setRange(long range);
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private RestrictedInputSlot boosterSlot;
 
-    @Shadow protected abstract void setDrain(long drain);
+    @Shadow(remap = false)
+    protected abstract void setDrain(long drain);
 
     @Inject(method = "broadcastChanges", at = @At(value = "INVOKE", target = "Lappeng/menu/AEBaseMenu;broadcastChanges()V", shift = At.Shift.BEFORE))
     private void broadcastChanges(CallbackInfo ci) {

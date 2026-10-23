@@ -1,3 +1,4 @@
+//? if neoforge && >=1.21.1 {
 package uk.co.hexeption.aeinfinitybooster;
 
 import net.neoforged.api.distmarker.Dist;
@@ -13,3 +14,4 @@ public class AEInfinityBoosterClient {
         modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }
+//?}

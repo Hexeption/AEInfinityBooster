@@ -1,7 +1,7 @@
 package uk.co.hexeption.aeinfinitybooster.setup;
 
+import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredItem;
 import uk.co.hexeption.aeinfinitybooster.item.DimensionCard;
 import uk.co.hexeption.aeinfinitybooster.item.InfinityCard;
 
@@ -13,8 +13,8 @@ import uk.co.hexeption.aeinfinitybooster.item.InfinityCard;
  */
 public class ModItems {
 
-    public static final DeferredItem<Item> INFINITY_CARD = Registration.ITEMS.registerItem("infinity_card", InfinityCard::new);
-    public static final DeferredItem<Item> DIMENSION_CARD = Registration.ITEMS.registerItem("dimension_card", DimensionCard::new);
+    public static final Supplier<Item> INFINITY_CARD = Registration.item("infinity_card", InfinityCard::new);
+    public static final Supplier<Item> DIMENSION_CARD = Registration.item("dimension_card", DimensionCard::new);
 
     static void register() {
 
