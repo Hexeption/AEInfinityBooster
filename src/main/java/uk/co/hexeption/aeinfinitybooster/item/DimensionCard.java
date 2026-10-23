@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import uk.co.hexeption.aeinfinitybooster.config.AEInfinityBoosterConfig;
 
 //? if >=1.21.5 {
 import java.util.function.Consumer;
@@ -53,6 +54,15 @@ public class DimensionCard extends Item {
 
     private static Component tooltip() {
         Style style = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withItalic(true);
-        return Component.translatable("item.aeinfinitybooster.dimension_card.tooltip").withStyle(style);
+        String key = chunkLoadingEnabled() ? "item.aeinfinitybooster.dimension_card.tooltip.chunk_loading" : "item.aeinfinitybooster.dimension_card.tooltip";
+        return Component.translatable(key).withStyle(style);
+    }
+
+    // Falls back to the default (on) if a tooltip is drawn before the config has loaded
+    private static boolean chunkLoadingEnabled() {
+        //? if forgeLike {
+        return !AEInfinityBoosterConfig.CONFIG_SPEC.isLoaded() || AEInfinityBoosterConfig.CHUNK_LOADING_ENABLED.get();
+        //?} else
+        /*return AEInfinityBoosterConfig.CHUNK_LOADING_ENABLED.get();*/
     }
 }

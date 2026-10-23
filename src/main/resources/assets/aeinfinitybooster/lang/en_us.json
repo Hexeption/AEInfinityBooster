@@ -3,6 +3,7 @@
   "item.aeinfinitybooster.infinity_card": "Infinity Range Booster",
   "item.aeinfinitybooster.dimension_card": "Dimension Card",
   "item.aeinfinitybooster.dimension_card.tooltip": "Does not provide chunk loading capabilities.",
+  "item.aeinfinitybooster.dimension_card.tooltip.chunk_loading": "Keeps the access point's chunk loaded.",
   "aeinfinitybooster.configuration.title": "AE Infinity Booster Configuration",
   "aeinfinitybooster.configuration.section.aeinfinitybooster.local.toml": "AE Infinity Booster Settings",
   "aeinfinitybooster.configuration.section.aeinfinitybooster.local.toml.title": "AE Infinity Booster Settings",
