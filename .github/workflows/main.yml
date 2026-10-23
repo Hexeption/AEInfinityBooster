@@ -45,13 +45,39 @@ jobs:
           done
           exit $failed
 
+  versions:
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - uses: actions/checkout@v7
+      # Reads the mc("1.20.1", "forge", "fabric") lines so new versions join the matrix on their own
+      - id: list
+        run: |
+          list=$(python3 - <<'PY'
+          import json, re
+          versions = []
+          for args in re.findall(r'^\s*mc\((.*)\)', open("settings.gradle.kts").read(), re.M):
+              mc, *loaders = re.findall(r'"([^"]+)"', args)
+              versions += [f"{mc}-{loader}" for loader in loaders]
+          print(json.dumps(versions))
+          PY
+          )
+          echo "list=$list" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: versions
     runs-on: ubuntu-latest
     # A game test that never finishes keeps the server running, so don't let one eat hours of runner time
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ${{ fromJson(needs.versions.outputs.list) }}
+    name: build (${{ matrix.version }})
     steps:
       - uses: actions/checkout@v7
-      # 1.20.1 needs 17, 1.20.5 to 1.21.1 need 21, and 26.x needs 25
+      # 1.16.5 needs 8, 1.18.2 to 1.20.4 need 17, 1.20.5 to 1.21.1 need 21, and 26.x needs 25. Gradle itself runs on 25
       - name: Setup JDKs
         uses: actions/setup-java@v6
         with:
@@ -65,19 +91,24 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
-      - name: Build all versions
-        run: ./gradlew build
-      - name: Run game tests on all versions
-        run: ./gradlew chiseledGameTest
+      - name: Build
+        run: ./gradlew ":${{ matrix.version }}:build"
+      - name: Run game tests
+        run: ./gradlew ":${{ matrix.version }}:runGameTestServer"
       - uses: actions/upload-artifact@v7
         with:
-          name: Builds
-          path: versions/*/build/libs/*.jar
+          name: build-${{ matrix.version }}
+          path: versions/${{ matrix.version }}/build/libs/*.jar
 
   publish:
-    needs: build
+    needs: [versions, build]
     if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ${{ fromJson(needs.versions.outputs.list) }}
+    name: publish (${{ matrix.version }})
     steps:
       - uses: actions/checkout@v7
         with:
@@ -104,12 +135,12 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
       # A v1.2.3 tag publishes as version 1.2.3; a manual run uses mod.version from gradle.properties
-      - name: Publish all versions
+      - name: Publish
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
-            ./gradlew publishMods "-Pmod.version=${GITHUB_REF_NAME#v}"
+            ./gradlew ":${{ matrix.version }}:publishMods" "-Pmod.version=${GITHUB_REF_NAME#v}"
           else
-            ./gradlew publishMods
+            ./gradlew ":${{ matrix.version }}:publishMods"
           fi
         env:
           DO_PUBLISH: "true"
