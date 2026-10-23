@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RNR",
+    "NEN",
+    "RNR"
+  ],
+  "key": {
+    "R": {
+      "item": "aeinfinitybooster:infinity_card"
+    },
+    "E": {
+      "item": "minecraft:ender_eye"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "item": "aeinfinitybooster:dimension_card"
+  }
+}

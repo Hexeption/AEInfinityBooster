@@ -7,12 +7,31 @@ plugins {
 val minecraft = stonecutter.current.version
 val unobfuscated = stonecutter.eval(minecraft, ">=26.1")
 
+// 1.16.5 players are on Java 8, and the game test framework only arrived in 1.17
+if (stonecutter.eval(minecraft, "<1.17")) {
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        toolchain.languageVersion = JavaLanguageVersion.of(8)
+    }
+    tasks.named("runGameTestServer") {
+        enabled = false
+    }
+}
+
 // AE2 renamed the access point classes in 1.20
 stonecutter {
     replacements.regex(stonecutter.eval(minecraft, "<1.20")) {
         replace(
             "\\bWirelessAccessPoint(BlockEntity|Menu|Screen)\\b", "Wireless\$1",
             "\\bWireless(BlockEntity|Menu|Screen)\\b", "WirelessAccessPoint\$1",
+        )
+    }
+    // ItemStack.is arrived in 1.17
+    replacements.regex(stonecutter.eval(minecraft, "<1.17")) {
+        replace(
+            "\\.is\\((ModItems\\.\\w+\\.get\\(\\))\\)", ".getItem() == \$1",
+            "\\.getItem\\(\\) == (ModItems\\.\\w+\\.get\\(\\))", ".is(\$1)",
         )
     }
 }
@@ -29,6 +48,7 @@ repositories {
 // AE2's maven group and artifact name differ between Minecraft versions
 val ae2 = mod.prop("ae2_version").let { version ->
     when {
+        stonecutter.eval(minecraft, "<1.17") -> "appeng:appliedenergistics2:$version"
         mod.isForge -> "appeng:appliedenergistics2-forge:$version"
         mod.isFabric -> "appeng:appliedenergistics2-fabric:$version"
         stonecutter.eval(minecraft, "<1.21") -> "appeng:appliedenergistics2-neoforge:$version"
@@ -131,6 +151,7 @@ modSettings {
         // e.g. 21.1.264 -> [21.1,) so players aren't forced onto the exact NeoForge build we compiled against
         "neoforgeVersionRange" to "[${mod.prop("neoforge_version", "0.0").substringBeforeLast('.')},)",
         "forgeLoaderVersion" to mod.prop("forge_loader_version", ""),
+        "mixinCompatibility" to if (stonecutter.eval(minecraft, "<1.17")) "JAVA_8" else "JAVA_17",
     )
 }
 

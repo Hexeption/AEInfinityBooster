@@ -12,8 +12,8 @@ public abstract class MixinWirelessBlockEntityRemove {
 
     @Inject(method = "setRemoved", at = @At("HEAD"))
     private void onSetRemoved(CallbackInfo ci) {
-        if ((Object) this instanceof IChunkForceable forceable) {
-            forceable.ib$setChunkForced(false);
+        if ((Object) this instanceof IChunkForceable) {
+            ((IChunkForceable) (Object) this).ib$setChunkForced(false);
         }
     }
 }

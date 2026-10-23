@@ -1,3 +1,4 @@
+//? if >=1.17 {
 package uk.co.hexeption.aeinfinitybooster.gametest;
 
 import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
@@ -190,3 +191,4 @@ public class CardGameTests {
                 .orElseThrow(() -> new IllegalStateException("Access point menu has no booster slot"));
     }
 }
+//?}

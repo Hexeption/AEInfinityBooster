@@ -4,7 +4,10 @@ import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.implementations.WirelessAccessPointScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.core.localization.GuiText;
+//? if >=1.17 {
 import appeng.menu.implementations.WirelessAccessPointMenu;
+//?} else
+/*import appeng.container.implementations.WirelessContainer;*/
 import appeng.util.Platform;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,9 +20,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /*import net.minecraft.network.chat.TextComponent;*/
 
 @Mixin(value = WirelessAccessPointScreen.class, remap = false)
+//? if >=1.17 {
 public class MixinWirelessAccessPointScreen extends AEBaseScreen<WirelessAccessPointMenu> {
 
     public MixinWirelessAccessPointScreen(WirelessAccessPointMenu menu, Inventory playerInventory, Component title, ScreenStyle style) {
+//?} else {
+/*public class MixinWirelessAccessPointScreen extends AEBaseScreen<WirelessContainer> {
+
+    public MixinWirelessAccessPointScreen(WirelessContainer menu, Inventory playerInventory, Component title, ScreenStyle style) {
+*///?}
 
         super(menu, playerInventory, title, style);
     }

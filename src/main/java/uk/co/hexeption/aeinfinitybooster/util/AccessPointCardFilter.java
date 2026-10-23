@@ -1,3 +1,4 @@
+//? if >=1.17 {
 package uk.co.hexeption.aeinfinitybooster.util;
 
 import appeng.api.inventories.InternalInventory;
@@ -18,3 +19,25 @@ public class AccessPointCardFilter implements IAEItemFilter {
         return stack.is(AEItems.WIRELESS_BOOSTER.asItem()) || stack.is(ModItems.DIMENSION_CARD.get()) || stack.is(ModItems.INFINITY_CARD.get());
     }
 }
+//?} else {
+/*package uk.co.hexeption.aeinfinitybooster.util;
+
+import appeng.core.Api;
+import appeng.util.inv.filter.IAEItemFilter;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
+
+public class AccessPointCardFilter implements IAEItemFilter {
+
+    @Override
+    public boolean allowExtract(IItemHandler inv, int slot, int amount) {
+        return true;
+    }
+
+    @Override
+    public boolean allowInsert(IItemHandler inv, int slot, ItemStack stack) {
+        return Api.instance().definitions().materials().wirelessBooster().isSameAs(stack) || stack.is(ModItems.DIMENSION_CARD.get()) || stack.is(ModItems.INFINITY_CARD.get());
+    }
+}
+*///?}

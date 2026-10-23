@@ -1,8 +1,5 @@
 package uk.co.hexeption.aeinfinitybooster.mixins;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
-import appeng.util.inv.AppEngInternalInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -20,20 +17,41 @@ import uk.co.hexeption.aeinfinitybooster.init.IChunkForceable;
 import uk.co.hexeption.aeinfinitybooster.setup.ModItems;
 import uk.co.hexeption.aeinfinitybooster.util.AccessPointCardFilter;
 
+//? if >=1.17 {
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
+import appeng.util.inv.AppEngInternalInventory;
+//?} else {
+/*import appeng.tile.AEBaseTileEntity;
+import appeng.tile.inventory.AppEngInternalInventory;
+import appeng.tile.networking.WirelessTileEntity;
+*///?}
+
 /**
  * MixinWirelessBlockEntity
  *
  * @author Hexeption admin@hexeption.co.uk
  * @since 22/12/2021 - 09:06 am
  */
+//? if >=1.17 {
 @Mixin(value = WirelessAccessPointBlockEntity.class, remap = false)
 public abstract class MixinWirelessBlockEntity extends AEBaseBlockEntity implements IChunkForceable {
+//?} else {
+/*@Mixin(value = WirelessTileEntity.class, remap = false)
+public abstract class MixinWirelessBlockEntity extends AEBaseTileEntity implements IChunkForceable {
+*///?}
 
     @Shadow @Final private AppEngInternalInventory inv;
 
+    //? if >=1.17 {
     public MixinWirelessBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
+    //?} else {
+    /*public MixinWirelessBlockEntity(BlockEntityType<?> type) {
+        super(type);
+    }
+    *///?}
 
     boolean ib$hasChunkLoadCard() {
         ItemStack card = inv.getStackInSlot(0);
@@ -47,9 +65,10 @@ public abstract class MixinWirelessBlockEntity extends AEBaseBlockEntity impleme
 
     @Override
     public void ib$setChunkForced(boolean force) {
-        if (force == ib$forcedChunk || !(level instanceof ServerLevel serverLevel)) {
+        if (force == ib$forcedChunk || !(level instanceof ServerLevel)) {
             return;
         }
+        ServerLevel serverLevel = (ServerLevel) level;
 
         BlockPos pos = getBlockPos();
         boolean changed = serverLevel.setChunkForced(pos.getX() >> 4, pos.getZ() >> 4, force);
@@ -57,7 +76,10 @@ public abstract class MixinWirelessBlockEntity extends AEBaseBlockEntity impleme
     }
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
+    //? if >=1.17 {
     private void init(BlockEntityType blockEntityType, BlockPos pos, BlockState blockState, CallbackInfo ci){
+    //?} else
+    /*private void init(BlockEntityType blockEntityType, CallbackInfo ci){*/
         inv.setFilter(new AccessPointCardFilter());
     }
 
