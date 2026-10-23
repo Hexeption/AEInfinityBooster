@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Rejects commit messages that don't follow Conventional Commits (https://www.conventionalcommits.org).
+# Enable once per clone with: git config core.hooksPath .githooks
+
+message=$(head -n 1 "$1")
+pattern='^(feat|fix|perf|refactor|docs|test|build|ci|style|revert|chore)(\([^)]+\))?!?: .+'
+
+# Git writes these itself for merges, reverts and fixups
+if [[ "$message" =~ ^(Merge|Revert|fixup!|squash!) ]] || [[ "$message" =~ $pattern ]]; then
+    exit 0
+fi
+
+cat >&2 <<MSG
+Commit message doesn't follow Conventional Commits:
+
+    $message
+
+Use <type>(<optional scope>): <description>, for example:
+
+    feat: add a range card for the quantum bridge
+    fix(26.3): register the config as LOCAL
+    build!: drop 1.20.4 support
+
+Types: feat, fix, perf, refactor, docs, test, build, ci, style, revert, chore
+MSG
+exit 1
