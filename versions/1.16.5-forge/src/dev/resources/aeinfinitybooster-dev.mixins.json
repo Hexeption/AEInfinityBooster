@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "uk.co.hexeption.aeinfinitybooster.dev.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinTransformation"
+  ]
+}

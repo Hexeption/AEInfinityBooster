@@ -17,6 +17,16 @@ if (stonecutter.eval(minecraft, "<1.17")) {
     loom.runs.named("gameTestServer") {
         server()
     }
+
+    // Dev runs only; see MixinTransformation
+    val dev = sourceSets.create("dev") {
+        compileClasspath += sourceSets.main.get().compileClasspath + sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().runtimeClasspath + sourceSets.main.get().output
+    }
+    loom.runs.configureEach {
+        source(dev)
+        programArgs("--mixin.config", "aeinfinitybooster-dev.mixins.json")
+    }
     tasks.named("runGameTestServer") {
         enabled = false
     }
@@ -143,6 +153,7 @@ loom {
         mods {
             register(mod.id) {
                 sourceSet(sourceSets.main.get())
+                sourceSets.findByName("dev")?.let { sourceSet(it) }
             }
         }
     }
