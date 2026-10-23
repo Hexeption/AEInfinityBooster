@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": "minecraft:ender_eye",
+    "N": "minecraft:netherite_ingot",
+    "R": "ae2:wireless_booster",
+    "S": "minecraft:nether_star"
+  },
+  "pattern": [
+    "ERE",
+    "RSR",
+    "NNN"
+  ],
+  "result": {
+    "id": "aeinfinitybooster:infinity_card"
+  }
+}
