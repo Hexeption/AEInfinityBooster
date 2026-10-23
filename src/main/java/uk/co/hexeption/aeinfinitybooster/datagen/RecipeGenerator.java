@@ -1,8 +1,5 @@
-//? if >=1.20 {
 package uk.co.hexeption.aeinfinitybooster.datagen;
 
-import appeng.core.definitions.AEItems;
-import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
@@ -20,8 +17,16 @@ import net.minecraft.data.recipes.FinishedRecipe;
 *///?}
 //? if >=1.21.2 && <26.3
 /*import uk.co.hexeption.aeinfinitybooster.AEInfinityBooster;*/
-//? if <26.3
+//? if >=1.19.3 && <26.3
 /*import net.minecraft.data.PackOutput;*/
+//? if <1.20
+/*import net.minecraft.data.DataGenerator;*/
+//? if >=1.19.3
+import net.minecraft.data.recipes.RecipeCategory;
+//? if >=1.17 {
+import appeng.core.definitions.AEItems;
+//?} else
+/*import appeng.core.Api;*/
 //? if >=26.3 {
 import net.minecraft.advancements.Advancement;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -64,29 +69,50 @@ public class RecipeGenerator extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput output) {
-    *///?} else {
+    *///?} else if >=1.20 {
     /*public RecipeGenerator(PackOutput output) {
         super(output);
     }
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> output) {
+    *///?} else if >=1.17 {
+    /*public RecipeGenerator(DataGenerator generator) {
+        super(generator);
+    }
+
+    @Override
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> output) {
+    *///?} else {
+    /*public RecipeGenerator(DataGenerator generator) {
+        super(generator);
+    }
+
+    @Override
+    protected void buildShapelessRecipes(Consumer<FinishedRecipe> output) {
     *///?}
         //? if >=1.21.2 {
         shaped(RecipeCategory.MISC, ModItems.INFINITY_CARD.get())
-        //?} else
-        /*ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.INFINITY_CARD.get())*/
+        //?} else if >=1.19.3 {
+        /*ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.INFINITY_CARD.get())
+        *///?} else
+        /*ShapedRecipeBuilder.shaped(ModItems.INFINITY_CARD.get())*/
                 .pattern("ERE").pattern("RSR").pattern("NNN")
                 .define('E', Items.ENDER_EYE)
+                //? if >=1.17 {
                 .define('R', AEItems.WIRELESS_BOOSTER.asItem())
+                //?} else
+                /*.define('R', Api.instance().definitions().materials().wirelessBooster().item())*/
                 .define('S', Items.NETHER_STAR)
                 .define('N', Items.NETHERITE_INGOT)
                 .unlockedBy("has_item", has(Items.NETHERITE_INGOT))
                 .save(output);
         //? if >=1.21.2 {
         shaped(RecipeCategory.MISC, ModItems.DIMENSION_CARD.get())
-        //?} else
-        /*ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.DIMENSION_CARD.get())*/
+        //?} else if >=1.19.3 {
+        /*ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.DIMENSION_CARD.get())
+        *///?} else
+        /*ShapedRecipeBuilder.shaped(ModItems.DIMENSION_CARD.get())*/
                 .pattern("RNR").pattern("NEN").pattern("RNR")
                 .define('R', ModItems.INFINITY_CARD.get())
                 .define('E', Items.ENDER_EYE)
@@ -113,4 +139,3 @@ public class RecipeGenerator extends RecipeProvider {
     }
     *///?}
 }
-//?}

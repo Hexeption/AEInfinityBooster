@@ -1,4 +1,4 @@
-//? if forgeLike && >=1.20 {
+//? if forgeLike {
 package uk.co.hexeption.aeinfinitybooster.datagen;
 
 import net.minecraft.data.DataGenerator;
@@ -14,12 +14,18 @@ import net.neoforged.fml.common.EventBusSubscriber;
 //?} else
 /*import net.neoforged.fml.common.Mod;*/
 //?} else {
-/*import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+/*import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 *///?}
-//? if <1.21.4
+//? if <1.21.4 && >=1.20
 /*import net.minecraft.data.DataProvider;*/
+//? if forge && >=1.19 {
+/*import net.minecraftforge.data.event.GatherDataEvent;
+*///?} else if forge && >=1.17 {
+/*import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+*///?} else if forge {
+/*import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+*///?}
 
 /**
  * RSInfinityBoosterDataGen
@@ -65,13 +71,35 @@ public class DataGenerators {
         DataGenerator generator = event.getGenerator();
 
         generator.addProvider(event.includeServer(), (DataProvider.Factory<RecipeGenerator>) output -> new RecipeGenerator(output, event.getLookupProvider()));
+        generator.addProvider(event.includeClient(), (DataProvider.Factory<ModelGenerator>) output -> new ModelGenerator(output, event.getExistingFileHelper()));
+    }
+    *///?} else if >=1.20 {
+    /*@SubscribeEvent
+    public static void onGatherData(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+
+        generator.addProvider(event.includeServer(), (DataProvider.Factory<RecipeGenerator>) RecipeGenerator::new);
+        generator.addProvider(event.includeClient(), (DataProvider.Factory<ModelGenerator>) output -> new ModelGenerator(output, event.getExistingFileHelper()));
+    }
+    *///?} else if >=1.19 {
+    /*@SubscribeEvent
+    public static void onGatherData(GatherDataEvent event) {
+        DataGenerator generator = event.getGenerator();
+
+        generator.addProvider(event.includeServer(), new RecipeGenerator(generator));
+        generator.addProvider(event.includeClient(), new ModelGenerator(generator, event.getExistingFileHelper()));
     }
     *///?} else {
     /*@SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
 
-        generator.addProvider(event.includeServer(), (DataProvider.Factory<RecipeGenerator>) RecipeGenerator::new);
+        if (event.includeServer()) {
+            generator.addProvider(new RecipeGenerator(generator));
+        }
+        if (event.includeClient()) {
+            generator.addProvider(new ModelGenerator(generator, event.getExistingFileHelper()));
+        }
     }
     *///?}
 }

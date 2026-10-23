@@ -14,6 +14,9 @@ if (stonecutter.eval(minecraft, "<1.17")) {
         targetCompatibility = JavaVersion.VERSION_1_8
         toolchain.languageVersion = JavaLanguageVersion.of(8)
     }
+    loom.runs.named("gameTestServer") {
+        server()
+    }
     tasks.named("runGameTestServer") {
         enabled = false
     }
@@ -95,6 +98,9 @@ dependencies {
 if (mod.isFabric) {
     sourceSets.main {
         resources.srcDir(rootProject.file("versions/$minecraft-forge/src/main/generated"))
+    }
+    tasks.named("runDatagen") {
+        enabled = false
     }
 }
 
