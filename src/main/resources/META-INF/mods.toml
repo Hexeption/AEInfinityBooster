@@ -1,0 +1,54 @@
+# Used by Forge 1.20.1 and NeoForge 1.20.4. NeoForge 1.20.5+ reads neoforge.mods.toml instead.
+modLoader="javafml"
+loaderVersion="[1,)"
+license="${license}"
+issueTrackerURL="https://github.com/Hexeption/AEInfinityBooster/issues"
+
+[[mods]]
+modId="${id}"
+version="${version}"
+displayName="${name}"
+authors="${authors}"
+description='''${description}'''
+logoFile="assets/${id}/icon.png"
+logoBlur=false
+
+#? if neoforge {
+[[mixins]]
+config="${id}.mixins.json"
+#?}
+
+[[dependencies.${id}]]
+#? if forge {
+modId="forge"
+mandatory=true
+versionRange="[${forgeLoaderVersion},)"
+#?} else {
+modId="neoforge"
+type="required"
+versionRange="${neoforgeVersionRange}"
+#?}
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${id}]]
+modId="minecraft"
+#? if forge {
+mandatory=true
+#?} else {
+type="required"
+#?}
+versionRange="[${minecraftVersion}]"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${id}]]
+modId="ae2"
+#? if forge {
+mandatory=true
+#?} else {
+type="required"
+#?}
+versionRange="${ae2VersionRange}"
+ordering="AFTER"
+side="BOTH"
