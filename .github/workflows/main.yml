@@ -3,27 +3,114 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "**" ]
+    tags: [ "v*" ]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish every version to CurseForge and Modrinth"
+        type: boolean
+        default: false
 
 jobs:
-   build:
+  commits:
+    if: github.ref_type != 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup JDK 25
+        with:
+          fetch-depth: 0
+      # Checks only commits that are new in this push or PR; history from before 2.0.0 isn't conventional
+      - name: Check commits follow Conventional Commits
+        env:
+          BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          if [ -n "$PR_BASE" ]; then
+            range="$PR_BASE..$PR_HEAD"
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
+            range="$BEFORE..$GITHUB_SHA"
+          else
+            range="$(git merge-base "origin/$DEFAULT_BRANCH" "$GITHUB_SHA")..$GITHUB_SHA"
+          fi
+          failed=0
+          for sha in $(git rev-list --no-merges "$range"); do
+            git log -1 --format=%B "$sha" > "$RUNNER_TEMP/msg"
+            if ! .githooks/commit-msg "$RUNNER_TEMP/msg"; then
+              echo "::error::Commit ${sha:0:7} doesn't follow Conventional Commits"
+              failed=1
+            fi
+          done
+          exit $failed
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # 1.20.1 needs 17, 1.20.5 to 1.21.1 need 21, and 26.x needs 25
+      - name: Setup JDKs
         uses: actions/setup-java@v4
         with:
-          java-version: '25'
           distribution: 'temurin'
+          java-version: |
+            17
+            21
+            25
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
-      - run: ./gradlew clean build publishCurseForge modrinth
-        env:
-          REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
-          CURSE_API_KEY: ${{ secrets.CURSE_API_KEY }}
-          MODRINTH_API_KEY: ${{ secrets.MODRINTH_API_KEY }}
+      - name: Build all versions
+        run: ./gradlew build
+      - name: Run game tests on all versions
+        run: ./gradlew chiseledGameTest
       - uses: actions/upload-artifact@v4
         with:
           name: Builds
-          path: build/libs/*.jar
+          path: versions/*/build/libs/*.jar
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Stonecraft uploads CHANGELOG.md as the release notes, so cut it down to just this release
+      - name: Generate release notes
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: ${{ startsWith(github.ref, 'refs/tags/v') && '--latest' || '--unreleased' }} --strip header
+        env:
+          OUTPUT: CHANGELOG.md
+      - name: Setup JDKs
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: |
+            17
+            21
+            25
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+      # A v1.2.3 tag publishes as version 1.2.3; a manual run uses mod.version from gradle.properties
+      - name: Publish all versions
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            ./gradlew publishMods "-Pmod.version=${GITHUB_REF_NAME#v}"
+          else
+            ./gradlew publishMods
+          fi
+        env:
+          DO_PUBLISH: "true"
+          CURSEFORGE_TOKEN: ${{ secrets.CURSE_API_KEY }}
+          CURSEFORGE_ID: "559313"
+          CURSEFORGE_SLUG: "aeinfinitybooster"
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_API_KEY }}
+          MODRINTH_ID: "VQhDBNs8"
