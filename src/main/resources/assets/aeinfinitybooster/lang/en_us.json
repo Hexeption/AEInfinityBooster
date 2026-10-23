@@ -15,9 +15,13 @@
   "aeinfinitybooster.configuration.dimensionCardDrain.tooltip": "The amount of power the Dimension Card drains per tick",
   "aeinfinitybooster.configuration.infinityCardDrain": "Infinity Card Drain",
   "aeinfinitybooster.configuration.infinityCardDrain.tooltip": "The amount of power the Infinity Card drains per tick",
+  "aeinfinitybooster.configuration.chunkLoadingEnabled": "Chunk Loading",
+  "aeinfinitybooster.configuration.chunkLoadingEnabled.tooltip": "Keep a Wireless Access Point's chunk loaded while it holds a Dimension Card or Infinity Card",
   "text.autoconfig.aeinfinitybooster.title": "AE Infinity Booster",
   "text.autoconfig.aeinfinitybooster.option.dimensionCardDrain": "Dimension Card Drain",
   "text.autoconfig.aeinfinitybooster.option.dimensionCardDrain.@Tooltip": "The amount of power the Dimension Card drains per tick",
   "text.autoconfig.aeinfinitybooster.option.infinityCardDrain": "Infinity Card Drain",
-  "text.autoconfig.aeinfinitybooster.option.infinityCardDrain.@Tooltip": "The amount of power the Infinity Card drains per tick"
+  "text.autoconfig.aeinfinitybooster.option.infinityCardDrain.@Tooltip": "The amount of power the Infinity Card drains per tick",
+  "text.autoconfig.aeinfinitybooster.option.chunkLoadingEnabled": "Chunk Loading",
+  "text.autoconfig.aeinfinitybooster.option.chunkLoadingEnabled.@Tooltip": "Keep a Wireless Access Point's chunk loaded while it holds a Dimension Card or Infinity Card"
 }

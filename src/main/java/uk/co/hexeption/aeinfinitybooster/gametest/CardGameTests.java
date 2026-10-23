@@ -7,6 +7,7 @@ import appeng.menu.implementations.WirelessAccessPointMenu;
 import appeng.menu.slot.RestrictedInputSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -55,6 +56,7 @@ public class CardGameTests {
             registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "booster_slot_accepts_cards"), CardGameTests::boosterSlotAcceptsCards);
             registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "infinity_card_sets_unlimited_range"), CardGameTests::infinityCardSetsUnlimitedRange);
             registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "dimension_card_sets_unlimited_range"), CardGameTests::dimensionCardSetsUnlimitedRange);
+            registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "card_force_loads_chunk"), CardGameTests::cardForceLoadsChunk);
         });
     }
     //?} else {
@@ -83,6 +85,11 @@ public class CardGameTests {
     @GameTest(template = TEMPLATE)
     public void dimensionCardSetsUnlimitedRangeTest(GameTestHelper helper) {
         dimensionCardSetsUnlimitedRange(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void cardForceLoadsChunkTest(GameTestHelper helper) {
+        cardForceLoadsChunk(helper);
     }
     *///?}
 
@@ -114,6 +121,27 @@ public class CardGameTests {
     // MixinWirelessMenu: a Dimension Card gives unlimited range at the configured drain
     public static void dimensionCardSetsUnlimitedRange(GameTestHelper helper) {
         assertCardRange(helper, new ItemStack(ModItems.DIMENSION_CARD.get()), 100L * AEInfinityBoosterConfig.DIMENSION_CARD_DRAIN.get());
+    }
+
+    // MixinWirelessBlockEntity: a card force-loads the access point's chunk, and taking it out releases the chunk
+    public static void cardForceLoadsChunk(GameTestHelper helper) {
+        WirelessAccessPointBlockEntity accessPoint = placeAccessPoint(helper);
+        ServerLevel level = helper.getLevel();
+        BlockPos pos = helper.absolutePos(ACCESS_POINT);
+        int chunkX = pos.getX() >> 4;
+        int chunkZ = pos.getZ() >> 4;
+
+        // setChunkForced returns whether it changed anything, so forcing an already forced chunk returns false
+        accessPoint.getInternalInventory().setItemDirect(0, new ItemStack(ModItems.INFINITY_CARD.get()));
+        accessPoint.saveChanges();
+        helper.assertFalse(level.setChunkForced(chunkX, chunkZ, true), "Chunk wasn't force-loaded with a card in the access point");
+
+        accessPoint.getInternalInventory().setItemDirect(0, ItemStack.EMPTY);
+        accessPoint.saveChanges();
+        helper.assertTrue(level.setChunkForced(chunkX, chunkZ, true), "Chunk stayed force-loaded after the card was taken out");
+
+        level.setChunkForced(chunkX, chunkZ, false);
+        helper.succeed();
     }
 
     private static void assertCardRange(GameTestHelper helper, ItemStack card, long expectedDrain) {
