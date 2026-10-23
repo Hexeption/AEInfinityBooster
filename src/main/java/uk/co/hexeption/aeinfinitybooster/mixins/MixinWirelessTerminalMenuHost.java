@@ -55,28 +55,28 @@ public class MixinWirelessTerminalMenuHost extends ItemMenuHost {
     *///?}
 
     /**
-     * @return the distance to report when any access point on the grid holds one of our cards, or null to let AE2 decide
+     * AE2 asks about every access point on the grid and connects through the closest, so each one only answers for
+     * its own card. One without power or a channel gets no boost, like AE2's own range check.
+     *
+     * @return the distance to report when this access point holds one of our cards, or null to let AE2 decide
      */
     @Unique
     private Double boostedDistance(IWirelessAccessPoint wirelessAccessPoint) {
-        Double distance = null;
-
-        for (WirelessAccessPointBlockEntity wirelessBlockEntity : wirelessAccessPoint.getGrid().getMachines(WirelessAccessPointBlockEntity.class)) {
-            ItemStack card = wirelessBlockEntity.getInternalInventory().getStackInSlot(0);
-
-            if (card.is(ModItems.DIMENSION_CARD.get())) {
-                distance = 1024.0D;
-            }
-
-            if (!this.getPlayer().level().dimension().equals(wirelessAccessPoint.getLocation().getLevel().dimension())) {
-                continue;
-            }
-
-            if (card.is(ModItems.INFINITY_CARD.get())) {
-                distance = 256.0D;
-            }
+        if (!wirelessAccessPoint.isActive() || !(wirelessAccessPoint instanceof WirelessAccessPointBlockEntity wirelessBlockEntity)) {
+            return null;
         }
 
-        return distance;
+        ItemStack card = wirelessBlockEntity.getInternalInventory().getStackInSlot(0);
+        boolean sameDimension = this.getPlayer().level().dimension().equals(wirelessAccessPoint.getLocation().getLevel().dimension());
+
+        if (card.is(ModItems.INFINITY_CARD.get()) && sameDimension) {
+            return 256.0D;
+        }
+
+        if (card.is(ModItems.DIMENSION_CARD.get())) {
+            return 1024.0D;
+        }
+
+        return null;
     }
 }
