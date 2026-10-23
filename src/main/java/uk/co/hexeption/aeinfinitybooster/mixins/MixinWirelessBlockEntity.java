@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -41,12 +42,20 @@ public abstract class MixinWirelessBlockEntity extends AEBaseBlockEntity impleme
         return card.is(ModItems.DIMENSION_CARD.get()) || card.is(ModItems.INFINITY_CARD.get());
     }
 
+    // Whether this access point is what keeps its chunk forced. It never releases a chunk that something else forced,
+    // like /forceload or another access point in the same chunk.
+    @Unique
+    private boolean ib$forcedChunk;
+
     @Override
     public void ib$setChunkForced(boolean force) {
-        if (level instanceof ServerLevel serverLevel) {
-            BlockPos pos = getBlockPos();
-            serverLevel.setChunkForced(pos.getX() >> 4, pos.getZ() >> 4, force);
+        if (force == ib$forcedChunk || !(level instanceof ServerLevel serverLevel)) {
+            return;
         }
+
+        BlockPos pos = getBlockPos();
+        boolean changed = serverLevel.setChunkForced(pos.getX() >> 4, pos.getZ() >> 4, force);
+        ib$forcedChunk = force && changed;
     }
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
@@ -76,6 +85,8 @@ public abstract class MixinWirelessBlockEntity extends AEBaseBlockEntity impleme
     private void onReady(CallbackInfo ci) {
         if (AEInfinityBoosterConfig.CHUNK_LOADING_ENABLED.get() && ib$hasChunkLoadCard()) {
             ib$setChunkForced(true);
+            // The chunk is usually still forced from before the world was saved, and that was this access point
+            ib$forcedChunk = true;
         }
     }
 

@@ -1,7 +1,7 @@
 {
   "type": "minecraft:function",
   "environment": "minecraft:default",
-  "function": "aeinfinitybooster:card_force_loads_chunk",
+  "function": "aeinfinitybooster:card_leaves_other_forced_chunks_alone",
   "max_ticks": 20,
   "required": true,
   "setup_ticks": 1,

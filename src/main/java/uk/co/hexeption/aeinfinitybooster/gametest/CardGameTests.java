@@ -56,7 +56,7 @@ public class CardGameTests {
             registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "booster_slot_accepts_cards"), CardGameTests::boosterSlotAcceptsCards);
             registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "infinity_card_sets_unlimited_range"), CardGameTests::infinityCardSetsUnlimitedRange);
             registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "dimension_card_sets_unlimited_range"), CardGameTests::dimensionCardSetsUnlimitedRange);
-            registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "card_force_loads_chunk"), CardGameTests::cardForceLoadsChunk);
+            registry.register(Identifier.fromNamespaceAndPath(AEInfinityBooster.MODID, "card_leaves_other_forced_chunks_alone"), CardGameTests::cardLeavesOtherForcedChunksAlone);
         });
     }
     //?} else {
@@ -88,8 +88,8 @@ public class CardGameTests {
     }
 
     @GameTest(template = TEMPLATE)
-    public void cardForceLoadsChunkTest(GameTestHelper helper) {
-        cardForceLoadsChunk(helper);
+    public void cardLeavesOtherForcedChunksAloneTest(GameTestHelper helper) {
+        cardLeavesOtherForcedChunksAlone(helper);
     }
     *///?}
 
@@ -123,24 +123,21 @@ public class CardGameTests {
         assertCardRange(helper, new ItemStack(ModItems.DIMENSION_CARD.get()), 100L * AEInfinityBoosterConfig.DIMENSION_CARD_DRAIN.get());
     }
 
-    // MixinWirelessBlockEntity: a card force-loads the access point's chunk, and taking it out releases the chunk
-    public static void cardForceLoadsChunk(GameTestHelper helper) {
+    // MixinWirelessBlockEntity: the game test framework already forces this chunk, so taking the card out must not release it
+    public static void cardLeavesOtherForcedChunksAlone(GameTestHelper helper) {
         WirelessAccessPointBlockEntity accessPoint = placeAccessPoint(helper);
         ServerLevel level = helper.getLevel();
         BlockPos pos = helper.absolutePos(ACCESS_POINT);
         int chunkX = pos.getX() >> 4;
         int chunkZ = pos.getZ() >> 4;
 
-        // setChunkForced returns whether it changed anything, so forcing an already forced chunk returns false
         accessPoint.getInternalInventory().setItemDirect(0, new ItemStack(ModItems.INFINITY_CARD.get()));
         accessPoint.saveChanges();
-        helper.assertFalse(level.setChunkForced(chunkX, chunkZ, true), "Chunk wasn't force-loaded with a card in the access point");
-
         accessPoint.getInternalInventory().setItemDirect(0, ItemStack.EMPTY);
         accessPoint.saveChanges();
-        helper.assertTrue(level.setChunkForced(chunkX, chunkZ, true), "Chunk stayed force-loaded after the card was taken out");
 
-        level.setChunkForced(chunkX, chunkZ, false);
+        // setChunkForced returns whether it changed anything, so false means the chunk was still forced
+        helper.assertFalse(level.setChunkForced(chunkX, chunkZ, true), "Taking the card out released a chunk the access point didn't force");
         helper.succeed();
     }
 
