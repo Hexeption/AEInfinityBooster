@@ -1,7 +1,13 @@
 package uk.co.hexeption.aeinfinitybooster.setup;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
+//? if neoforge {
+import net.neoforged.neoforge.registries.DeferredItem;
+//?} else if forge {
+/*import net.minecraftforge.registries.RegistryObject;
+*///?} else {
+/*import java.util.function.Supplier;
+*///?}
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -67,7 +73,13 @@ public class Registration {
     };
     *///?}
 
-    static Supplier<Item> item(String name, Function<Item.Properties, Item> factory) {
+    //? if neoforge {
+    static DeferredItem<Item> item(String name, Function<Item.Properties, Item> factory) {
+    //?} else if forge {
+    /*static RegistryObject<Item> item(String name, Function<Item.Properties, Item> factory) {
+    *///?} else {
+    /*static Supplier<Item> item(String name, Function<Item.Properties, Item> factory) {
+    *///?}
         //? if neoforge {
         return ITEMS.registerItem(name, factory);
         //?}
