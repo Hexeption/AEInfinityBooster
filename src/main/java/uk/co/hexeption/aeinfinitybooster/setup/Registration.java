@@ -3,7 +3,9 @@ package uk.co.hexeption.aeinfinitybooster.setup;
 import java.util.function.Function;
 //? if neoforge {
 import net.neoforged.neoforge.registries.DeferredItem;
-//?} else if forge {
+//?} else if forge && <1.17 {
+/*import net.minecraftforge.fml.RegistryObject;
+*///?} else if forge {
 /*import net.minecraftforge.registries.RegistryObject;
 *///?} else {
 /*import java.util.function.Supplier;
